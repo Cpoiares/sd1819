@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="meta2:exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/meta2_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="meta2" />
+          <element id="module-output" name="meta1" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="javassist:javassist:3.12.1.GA" />
+          <element id="library" level="project" name="javax.servlet:jstl:1.2" />
+          <element id="library" level="project" name="org.apache.logging.log4j:log4j-core:2.11.1" />
+          <element id="library" level="project" name="Struts 2-2.5.14.1" />
+          <element id="library" level="project" name="com.github.scribejava:scribejava-core:6.2.0" />
+          <element id="library" level="project" name="javax.websocket:javax.websocket-api:1.1" />
+          <element id="library" level="project" name="org.json:json:20180813" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="meta2/web/Web" />
+    </root>
+  </artifact>
+</component>

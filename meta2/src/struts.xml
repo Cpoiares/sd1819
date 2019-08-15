@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The core configuration file for the framework is the default (struts.xml) file
+and should reside on the classpath of the webapp (generally /WEB-INF/classes). -->
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <!--Enable mapping of server endpoint -->
+    <constant name="struts.action.excludePattern" value="/ws"/>
+
+    <!-- devMode equals debug information and reload everything for every request -->
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.ui.theme" value="simple"/>
+
+    <package name="site" extends="struts-default">
+
+        <interceptors>
+            <interceptor name="loginInterceptor" class="site.interceptor.LoginInterceptor"/>
+            <interceptor name="editorInterceptor" class="site.interceptor.EditorInterceptor"/>
+            <interceptor-stack name="loginStack">
+                <interceptor-ref name="timer"/>
+                <interceptor-ref name="loginInterceptor"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            <interceptor-stack name="editorStack">
+                <interceptor-ref name="timer"/>
+                <interceptor-ref name="loginInterceptor"/>
+                <interceptor-ref name="editorInterceptor"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="loginStack"/>
+
+        <default-action-ref name="index"/>
+
+        <global-results>
+            <result name="error">/error.jsp</result>
+            <result name="login">/login.jsp</result>
+        </global-results>
+
+        <!-- all exceptions not caught by the application will lead to error.jsp -->
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+
+        <!-- 'index' action leads to the view provided by index.jsp -->
+        <!-- https://stackoverflow.com/questions/28137164/struts2-cant-call-action-before-rendering-index-jsp -->
+        <action name="index">
+            <result>/login.jsp</result>
+        </action>
+
+        <action name="menu" class="site.action.LoginAction" method="menu">
+            <result>/menu.jsp</result>
+        </action>
+
+        <action name="login" class="site.action.LoginAction" method="execute">
+            <interceptor-ref name="defaultStack"/>
+            <result name="login">/login.jsp</result>
+            <result name="success" type="redirectAction">menu</result>
+        </action>
+
+        <action name="register" class="site.action.RegisterAction" method="execute">
+            <interceptor-ref name="defaultStack"/>
+            <result name="login">/register.jsp</result>
+            <result name="success" type="redirectAction">menu</result>
+        </action>
+
+        <action name="artistas" class="site.action.ArtistasAction" method="execute">
+            <result name="success">/artistas.jsp</result>
+        </action>
+        <action name="albums" class="site.action.AlbumsAction" method="execute">
+            <result name="success">/albums.jsp</result>
+        </action>
+
+        <action name="detalhesArtista" class="site.action.DetalhesArtistaAction" method="execute">
+            <result name="success">/detalhesArtista.jsp</result>
+        </action>
+
+        <action name="detalhesAlbum" class="site.action.DetalhesAlbumAction" method="execute">
+            <result name="success">/detalhesAlbum.jsp</result>
+        </action>
+
+        <action name="detalhesMusica" class="site.action.DetalhesMusicaAction" method="execute">
+            <result name="success">/detalhesMusica.jsp</result>
+        </action>
+
+        <action name="criticar" class="site.action.CriticarAction" method="execute">
+            <result name="success">/menu.jsp</result>
+            <result name="input">/criticar.jsp</result>
+        </action>
+
+        <action name="procurarArtistas" class="site.action.ProcurarArtistasAction" method="execute">
+            <result name="success">/procurarArtistas.jsp</result>
+            <result name="input">/procurarArtistas.jsp</result>
+        </action>
+
+        <action name="procurarAlbums" class="site.action.ProcurarAlbumsAction" method="execute">
+            <result name="success">/procurarAlbums.jsp</result>
+            <result name="input">/procurarAlbums.jsp</result>
+        </action>
+
+        <action name="procurarMusicas" class="site.action.ProcurarMusicasAction" method="execute">
+            <result name="success">/procurarMusicas.jsp</result>
+            <result name="input">/procurarMusicas.jsp</result>
+        </action>
+
+        <!-- cenas de editor e tal -->
+        <action name="adicionarArtista" class="site.action.ArtistasAction" method="adicionarArtista">
+            <interceptor-ref name="editorStack"/>
+            <result name="success" type="chain">artistas</result>
+            <result name="input">/adicionarArtista.jsp</result>
+        </action>
+
+        <action name="deleteArtist" class="site.action.DeleteArtistAction" method="execute">
+            <interceptor-ref name="editorStack"/>
+            <result name="success">/artistas.jsp</result>
+            <result name="input">/artistas.jsp</result>
+        </action>
+
+        <action name ="deleteSong" class="site.action.DeleteSongAction" method="execute">
+            <interceptor-ref name="editorStack"/>
+            <result name="success" type="redirectAction">albums</result>
+        </action>
+
+        <action name ="deleteAlbum" class="site.action.DeleteAlbumAction" method="execute">
+            <interceptor-ref name="editorStack"/>
+            <result name="success" type="redirectAction">albums</result>
+        </action>
+
+        <action name="adicionarAlbum" class="site.action.AlbumsAction" method="adicionarAlbum">
+            <interceptor-ref name="editorStack"/>
+            <result name="success" type="redirectAction">artistas</result>
+        </action>
+
+        <action name="adicionarMusica" class="site.action.DetalhesAlbumAction" method="adicionarMusica">
+            <interceptor-ref name="editorStack"/>
+            <result name="success" type="redirectAction">albums</result>
+        </action>
+
+        <action name = "makeEditor" class="site.action.MakeEditorAction" method="execute">
+            <interceptor-ref name="editorStack"/>
+            <result name="input">/editores.jsp</result>
+            <result name="success">/editores.jsp</result>
+        </action>
+
+        <action name="editAlbum" class="site.action.EditAlbumAction" method="execute">
+            <interceptor-ref name="editorStack"/>
+            <result name="input">/editarAlbum.jsp</result>
+            <result name="success">/detalhesAlbum.jsp</result>
+        </action>
+
+        <!-- cenas de dropbox e tal -->
+        <action name="dropboxAdd" class="site.action.LoginAction" method="dropboxAdd">
+            <result name="success" type="chain">menu</result>
+        </action>
+
+        <action name="dropboxRegister" class="site.action.LoginAction" method="dropboxRegister">
+            <interceptor-ref name="defaultStack"/>
+            <result name="success" type="chain">menu</result>
+        </action>
+
+        <action name="dropboxLogin" class="site.action.LoginAction" method="dropboxLogin">
+            <interceptor-ref name="defaultStack"/>
+            <result name="success" type="chain">menu</result>
+        </action>
+
+        <action name="adicionarMusicaDropbox" class="site.action.DetalhesMusicaAction" method="adicionarMusicaDropbox">
+            <result name="success">/detalhesMusica.jsp</result>
+        </action>
+        
+        <action name="addFileMembers" class="site.action.DetalhesMusicaAction" method="addFileMembers">
+            <result name="success">/detalhesMusica.jsp</result>
+        </action>
+    </package>
+</struts>

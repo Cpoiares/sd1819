@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Servers" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
+    <toRun type="Application" name="MulticastClient" />
+    <toRun type="Application" name="MulticastServer" />
+    <toRun type="Application" name="RMIServer" />
+    <toRun type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" name="Tomcat 9.0.13" />
+    <method v="2" />
+  </configuration>
+</component>
